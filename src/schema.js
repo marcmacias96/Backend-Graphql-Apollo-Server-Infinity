@@ -21,6 +21,7 @@ export default `
     views : Int
     likes : Int
     timeStamp : Int
+    uniqueId : String
     comments : [Comment]
   }
 

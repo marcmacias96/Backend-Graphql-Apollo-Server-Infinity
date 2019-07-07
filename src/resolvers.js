@@ -108,38 +108,45 @@ export default {
                 //campos no obligatorios
                 title: ``,
                 description: ``,
-                fileName :'',
+                fileName: '',
                 views: ``,
                 likes: ``,
                 timeStamp: ``,
+                uniqueId: ``,
                 comments: [],
 
             }
-            const imgUrl = randomNumber();
-            var ext =''
-            if (input.file) { 
+
+            if (input.file) {
                 const file = await input.file.then(file => {
-                return file
+                    return file
                 })
+                console.log("entro");
+
                 const { filename, createReadStream } = file
+                const imgUrl = randomNumber();
                 const stream = createReadStream()
                 const ext = path.extname(filename).toLowerCase();
                 const targetPath = path.resolve(`src/public/upload/${imgUrl}${ext}`);
                 if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.gif') {
                     stream.on('data', (data) => {
+
+
                         fs.appendFile(targetPath, data, function(err) {
                             if (err) throw err;
+
                         });
                     })
 
                 }
                 defautls.fileName = imgUrl + ext
+                defautls.uniqueId = imgUrl
             }
-            
+
             const image = await new Image(Object.assign(defautls, input)).save()
-                const user = await User.findOne({ _id: ObjectID(usr_id) })
-                user.images.push(image)
-                user.save()
+            const user = await User.findOne({ _id: ObjectID(usr_id) })
+            user.images.push(image)
+            user.save()
 
             console.log(user);
             return user
@@ -149,8 +156,8 @@ export default {
 
 
 
-            
-      
+
+
         },
         createComment: async(parent, args) => {
             const { input, img_id } = args
