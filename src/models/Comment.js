@@ -7,7 +7,9 @@ const CommentSChema = new Schema({
   },
   timeStamp : {
       type : Number,
-      required : false
+      required : false,
+      default : Date.now
+
   },
   postedBy : {
       type : mongoose.Schema.Types.ObjectId,

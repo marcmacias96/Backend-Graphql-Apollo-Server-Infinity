@@ -46,7 +46,6 @@ export default `
 
   input CommentInput {
     comment : String!
-    timeStamp : Int
     postedBy : ID!
   }
 

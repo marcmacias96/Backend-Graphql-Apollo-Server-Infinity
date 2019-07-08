@@ -109,9 +109,8 @@ export default {
                 title: ``,
                 description: ``,
                 fileName: '',
-                views: ``,
-                likes: ``,
-                timeStamp: ``,
+                views: 0,
+                likes: 0,
                 uniqueId: ``,
                 comments: [],
 
@@ -121,8 +120,6 @@ export default {
                 const file = await input.file.then(file => {
                     return file
                 })
-                console.log("entro");
-
                 const { filename, createReadStream } = file
                 const imgUrl = randomNumber();
                 const stream = createReadStream()
@@ -147,8 +144,6 @@ export default {
             const user = await User.findOne({ _id: ObjectID(usr_id) })
             user.images.push(image)
             user.save()
-
-            console.log(user);
             return user
 
 

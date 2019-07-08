@@ -27,17 +27,20 @@ const ImageSChema = new Schema({
         type: Date,
         default : Date.now
     },
+    uniqueId : {
+        type : String
+    },
     comments: {
         type: [Comment],
         required: false
     }
 });
-
+/*
 ImageSChema.virtual('uniqueId')
     .get(function() {
         return this.filename.replace(path.extname(this.filename), '');
     });
-
+*/
 const Image = mongoose.model('images', ImageSChema);
 
 export default Image;
