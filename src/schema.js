@@ -74,6 +74,10 @@ export default `
     createComment(input : CommentInput!, img_id : ID!) : Image!
   }
 
+  type Subscription {
+    photos : Image
+  }
+
   type Token {
     token : String!
   }

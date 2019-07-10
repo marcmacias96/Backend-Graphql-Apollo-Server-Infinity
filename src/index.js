@@ -1,20 +1,15 @@
 import http from 'http';
 import express from 'express';
 import path from 'path'
-
-const morgan = require('morgan');
-const app = express();
-//mongodb://localhost/graphql-mongo
-import mongoose from 'mongoose';
-mongoose.connect('mongodb://localhost/graphql-mongo', { useNewUrlParser: true })
-    .then(() => console.log('connected to db'))
-    .catch(err => console.log(err));
-
-import jwt from 'jsonwebtoken'
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 
+const app = express();
 
 
+//mongodb://localhost/graphql-mongo
+
+import './DB/connection'
+import jwt from 'jsonwebtoken'
 import typeDefs from './schema';
 import resolvers from './resolvers.js'
 
@@ -39,7 +34,10 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 const SERVER = new ApolloServer({
     typeDefs,
     resolvers,
-    context: async(req) => {
+    subscriptions: {
+      onConnect: () => console.log('Connected to websocket'),
+    },
+    context: async(req,) => {
         //const me = await getMe(req)
         //console.log(me);
 
@@ -62,6 +60,6 @@ const httpServer = http.createServer(app);
 SERVER.installSubscriptionHandlers(httpServer);
 
 // start the server
-app.listen(app.get('port'), () => {
+httpServer.listen(app.get('port'), () => {
     console.log('server on port', app.get('port'));
 });

@@ -1,4 +1,4 @@
-import { AuthenticationError, UserInputError } from 'apollo-server-express';
+import { AuthenticationError, UserInputError, PubSub } from 'apollo-server-express';
 import { Car, User, Image, Comment } from './models/Models'
 import { ObjectID } from 'mongodb'
 import jwt from 'jsonwebtoken'
@@ -6,6 +6,8 @@ import fs from 'fs'
 import path from 'path'
 import { randomNumber } from './Helpers/libs.js'
 
+const pubsub = new PubSub();
+const PHOTO_ADDED = 'PHOTO_ADDED';
 const createToken = async(user, secret, expireIn) => {
     const { _id, email, name } = user
     return await jwt.sign({ _id, email, name }, secret)
@@ -144,14 +146,8 @@ export default {
             const user = await User.findOne({ _id: ObjectID(usr_id) })
             user.images.push(image)
             user.save()
+            pubsub.publish(PHOTO_ADDED, { photos: image });
             return user
-
-
-
-
-
-
-
 
         },
         createComment: async(parent, args) => {
@@ -168,5 +164,10 @@ export default {
             image.save()
             return image
         }
-    }
+    },
+    Subscription :  {
+        photos : {
+          subscribe: () => pubsub.asyncIterator([PHOTO_ADDED])
+        }
+      },
 }
