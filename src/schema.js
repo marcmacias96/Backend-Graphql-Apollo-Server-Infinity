@@ -32,6 +32,13 @@ export default `
     postedBy : ID!
   }
 
+  type Stat {
+    images : Int
+    comments : Int
+    Views : Int
+    likes : Int
+  }
+
   input UserInput {
     name : String!
     email : String!
@@ -63,6 +70,7 @@ export default `
     getImage( id : ID!) : Image
     getComments : [Comment!]
     getComment( id : ID!) : Comment
+    stats (usr_id : ID!) : Stat!
   }
 
   type Mutation {
@@ -72,10 +80,12 @@ export default `
     createUser(input : UserInput!) : User!
     createImage(input : ImageInput!, usr_id : ID!) : User!
     createComment(input : CommentInput!, img_id : ID!) : Image!
+    like(img_id : ID!) : Image!
   }
 
   type Subscription {
     photos : Image
+    comments : Comment
   }
 
   type Token {

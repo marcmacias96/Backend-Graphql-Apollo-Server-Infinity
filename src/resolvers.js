@@ -8,6 +8,7 @@ import { randomNumber } from './Helpers/libs.js'
 
 const pubsub = new PubSub();
 const PHOTO_ADDED = 'PHOTO_ADDED';
+const COMMENT_ADDED = 'COMMENT_ADDED';
 const createToken = async(user, secret, expireIn) => {
     const { _id, email, name } = user
     return await jwt.sign({ _id, email, name }, secret)
@@ -50,6 +51,21 @@ export default {
             console.log(comments);
 
             return comments
+        },
+        stats : async (parent, args) => {
+            const { usr_id } = args
+            const user = await User.findOne({ _id : usr_id})
+            let likes
+            user.images.forEach(image => {
+               likes += image.likes 
+            });
+            const stats = {
+                images : user.images.length,
+                comments : user.images.comments.length,
+                views : 0,
+                likes : likes
+            }
+            return stats
         }
 
     },
@@ -162,12 +178,23 @@ export default {
             const image = await Image.findOne({ _id: ObjectID(img_id) })
             image.comments.push(comment)
             image.save()
+            pubsub.publish(COMMENT_ADDED, { comments: comment });
+            return image
+        },
+        like : async(parent, args) => {
+            const { img_id } = args
+            const image = await Image.findOne({ _id: ObjectID(img_id) })
+            image.likes = image.likes + 1
+            await image.save()
             return image
         }
     },
     Subscription :  {
         photos : {
           subscribe: () => pubsub.asyncIterator([PHOTO_ADDED])
+        },
+        comments : {
+            subscribe : () => pubsub.asyncIterator([COMMENT_ADDED])
         }
       },
 }
