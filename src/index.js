@@ -16,10 +16,15 @@ import resolvers from './resolvers.js'
 //functions
 const SECRET = 'Guitarra2896'
 const getMe = async req => {
-    const token = req.headers['x-token']
-    if (token) {
+    let token
+    try {
+      token = req.headers.authorization.split(" ")
+    } catch (error) {
+        token = null
+    }
+    if (token != null) {
         try {
-            return await jwt.verify(token, SECRET)
+            return await jwt.verify(token[1],SECRET)
         } catch (error) {
             throw new AuthenticationError(
                 'Your session expired. Sign in again.',
@@ -37,12 +42,10 @@ const SERVER = new ApolloServer({
     subscriptions: {
       onConnect: () => console.log('Connected to websocket'),
     },
-    context: async(req,) => {
-        //const me = await getMe(req)
-        //console.log(me);
-
-        //return { SECRET, me }
-        return { SECRET }
+    context: async({req}) => {
+        const me = await getMe(req)
+        return { SECRET, me }
+        //return { SECRET }
     },
     introspection: true,
     playground: true,

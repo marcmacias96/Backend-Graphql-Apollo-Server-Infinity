@@ -11,7 +11,7 @@ const PHOTO_ADDED = 'PHOTO_ADDED';
 const COMMENT_ADDED = 'COMMENT_ADDED';
 const createToken = async(user, secret, expireIn) => {
     const { _id, email, name } = user
-    return await jwt.sign({ _id, email, name }, secret)
+    return await jwt.sign({ _id, email, name },secret)
 }
 
 export default {
@@ -55,17 +55,25 @@ export default {
         stats : async (parent, args) => {
             const { usr_id } = args
             const user = await User.findOne({ _id : usr_id})
-            let likes
-            user.images.forEach(image => {
-               likes += image.likes 
-            });
+            let likes = 0
+            let comments = 0
+            let images = 0
+            if (user.images != null) {
+                    user.images.forEach(image => {
+                    images ++   
+                });
+            }
+            
             const stats = {
-                images : user.images.length,
-                comments : user.images.comments.length,
+                images :images,
+                comments : comments,
                 views : 0,
                 likes : likes
             }
             return stats
+        },
+        getMe : (parant, args, {me}) => {
+            return me
         }
 
     },
@@ -196,5 +204,5 @@ export default {
         comments : {
             subscribe : () => pubsub.asyncIterator([COMMENT_ADDED])
         }
-      },
+    }
 }

@@ -71,6 +71,7 @@ export default `
     getComments : [Comment!]
     getComment( id : ID!) : Comment
     stats (usr_id : ID!) : Stat!
+    getMe  : User!
   }
 
   type Mutation {
