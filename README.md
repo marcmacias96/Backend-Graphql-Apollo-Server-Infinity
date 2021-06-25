@@ -41,7 +41,7 @@ API Nodejs-Graphql que administra servicios de una Red social, clone de instagra
 ```
 
 
-## Dependencies
+## Dependencias
 
 - apollo-server-express 
 - bcryptjs
