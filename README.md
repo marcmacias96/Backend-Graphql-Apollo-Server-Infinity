@@ -4,8 +4,11 @@
 
 API Nodejs-Graphql que administra servicios de una Red social, clone de instagram 
 
-## Tecnologias
+## Tecnologías
 ![Mongo-Graphql-Express.jpg](https://github.com/marcmacias96/Backend-Graphql-Apollo-Server-Infinity/blob/master/Mongo-Graphql-Express.jpg)
+
+## Diagrama de arquitectura física
+https://github.com/marcmacias96/Backend-Graphql-Apollo-Server-Infinity/blob/master/InfinityAPP%20-%20DIAGRAMA%20FISICO.png
 
 
 `Schema`
